@@ -1,0 +1,3 @@
+*.bak
+*.Identifier
+src/Scanner.cpp:Zone.Identifier

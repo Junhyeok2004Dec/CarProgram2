@@ -1,0 +1,31 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+
+Views:
+  - Class: rviz/Orbit
+    Name: Orbit
+    Frame: base_link
+    X: 0
+    Y: 0
+    Z: 10
+    Distance: 10
+
+Displays:
+  - Class: rviz/Marker
+    Name: Scan Demo Marker
+    Topic: /visualization_marker
+    Marker Type: Arrow
+    Color:
+      R: 1.0
+      G: 0.0
+      B: 0.0
+      A: 1.0
+    Scale:
+      X: 0.1
+      Y: 0.1
+      Z: 0.1
+    Frame: base_link
+
