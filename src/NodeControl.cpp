@@ -2,9 +2,21 @@
 #include <ackermann_msgs/AckermannDriveStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
-#include <cmath>
+#include <vector>
+#include <functional>
 
-std::vector<geometry_msgs::Point> waypoints;
+// Waypoints
+std::vector<geometry_msgs::Point> waypoints = [] {
+    std::vector<geometry_msgs::Point> wps;
+    for (int i = 0; i < 5; ++i) {
+        geometry_msgs::Point p;
+        p.x = i * 1.0;  // 0,1,2,3,4
+        p.y = i * 1.0;  
+        wps.push_back(p);
+    }
+    return wps;
+}();
+
 int current_waypoint = 0;
 geometry_msgs::Point current_position;
 
@@ -26,13 +38,6 @@ int main(int argc, char **argv) {
 
     ros::Publisher drive_pub = nh.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 10);
     ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
-
-    // Define waypoints (for example, add actual coordinates)
-    geometry_msgs::Point p1, p2, p3;
-    p1.x = 1.0; p1.y = 1.0;
-    p2.x = 2.0; p2.y = 2.0;
-    p3.x = 3.0; p3.y = 3.0;
-    waypoints = {p1, p2, p3};
 
     ros::Rate loop_rate(10);
 
