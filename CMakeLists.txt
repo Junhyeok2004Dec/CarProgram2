@@ -2,12 +2,19 @@ cmake_minimum_required(VERSION 3.11.0)
 project(f1tenth_code)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  sensor_msgs
-  std_msgs
-  visualization_msgs
-  ackermann_msgs
-  nav_msgs
+    roslib
+    roscpp
+    tf2
+    tf2_ros
+    tf2_geometry_msgs
+    ackermann_msgs
+    nav_msgs
+    sensor_msgs
+    geometry_msgs
+    interactive_markers
+    visualization_msgs
+    std_msgs
+    message_generation
 )
 
 catkin_package()
@@ -16,6 +23,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+# 기존 노드들
 add_executable(scan_processor src/ScanProcessor.cpp)
 target_link_libraries(scan_processor ${catkin_LIBRARIES})
 
@@ -24,3 +32,7 @@ target_link_libraries(marker_publisher ${catkin_LIBRARIES})
 
 add_executable(straight_drive src/GoStraight5Sec.cpp)
 target_link_libraries(straight_drive ${catkin_LIBRARIES})
+
+# 추가된 point_follower 노드
+add_executable(point_follower src/NodeControl.cpp)
+target_link_libraries(point_follower ${catkin_LIBRARIES})
