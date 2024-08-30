@@ -22,7 +22,6 @@ void pointCallback(const geometry_msgs::PointStamped::ConstPtr &msg) {
 
 void driveCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
     drive_data = *msg;
-    ROS_INFO("-----%ld-----");
     ROS_INFO("Received Position Steering %f rad , Speed = %f" , drive_data.drive.steering_angle, drive_data.drive.speed);
 
     
@@ -68,7 +67,6 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg, ros::Publisher &drive
 
 
         if(waypoints.size() > 1) { // yes waypoints
-            ROS_INFO(" ");
         } else {
             // No waypoints;
             ROS_INFO("NO waypoints recognized");

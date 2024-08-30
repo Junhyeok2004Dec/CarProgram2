@@ -9,14 +9,11 @@
 #include <vector>
 
 
-struct Point 
-{
-    std_msgs::Float32 x;
-    std_msgs::Float32 y;
-};
 
-Point destination; // 도착지점 -> scan_angle 방위의 scan_distance 거리 
-Point currentPOS; // 현재지점 -> 제곧내
+geometry_msgs::Point current_position, destination;
+
+geometry_msgs::Point destination; // 도착지점 -> scan_angle 방위의 scan_distance 거리 
+geometry_msgs::Point currentPOS; // 현재지점 -> 제곧내
 
 static float COLLISION_RANGE = 1.0f; 
 
@@ -26,23 +23,35 @@ int current_waypoint_index = 0;
 std_msgs::Float32 scan_length_msg, scan_angle_msg;
 
 
-void distanceCallback(const std_msgs::Float32 &msg) {
-    destination.x = &msg;
+geometry_msgs::Point calcPositionFromScan(const std_msgs::Float32 &distance, const std_msgs::Float32 &angle)  {
+
+    geometry_msgs::Point dest;
+    dest.x = current_position.x + distance * cos(angle);
+    dest.y = current_position.y + distance * sin(angle);
+
+    return dest;
+
+
+    
+
+}
+
+void distanceCallback(const std_msgs::Float32& msg) {
+    scan_length_msg = *msg;
 
 }
 
 void angleCallback(const std_msgs::Float32 &msg) {
-    destination.y = &msg;
+    scan_angle_msg = *msg;
 }
 
-void pointCallback(const geometry_msgs::PointStamped::ConstPtr &msg) {
-    waypoints.push_back(*msg);
-    ROS_INFO("Received waypoint %ld: x = %f, y = %f", waypoints.size(), msg->point.x, msg->point.y);
-}
+//void pointCallback(const geometry_msgs::PointStamped::ConstPtr &msg) {
+//    waypoints.push_back(*msg);
+//    ROS_INFO("Received waypoint %ld: x = %f, y = %f", waypoints.size(), msg->point.x, msg->point.y);
+//}
 
 void driveCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
     drive_data = *msg;
-    ROS_INFO("-----%ld-----");
     ROS_INFO("Received Position Steering %f rad , Speed = %f" , drive_data.drive.steering_angle, drive_data.drive.speed);
 
     
@@ -61,12 +70,13 @@ float computeSteeringAngle(const geometry_msgs::Point &goal, const geometry_msgs
 void odomCallback(const nav_msgs::Odometry::ConstPtr &msg, ros::Publisher &drive_pub) {
 
 
-    geometry_msgs::Point current_position = msg->pose.pose.position;
+    current_position = msg->pose.pose.position;
     //auto target = waypoints[current_waypoint_index].point;
 
-    auto targer = 
+    auto target = calcPositionFromScan(scan_sub_length, scan_sub_angle);
     float dist = distanceToGoal(target, current_position);
 
+    ROS_INFO("Current Position: x = %f, y = %f", current_position.x, current_position.y);
     ROS_INFO("Current Position: x = %f, y = %f", current_position.x, current_position.y);
     ROS_INFO("Distance to target: %f", dist);
 
@@ -75,7 +85,7 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg, ros::Publisher &drive
         ROS_INFO("Reached waypoint %d, moving to next", current_waypoint_index);
     }
     
-        else {
+    else {
         ackermann_msgs::AckermannDriveStamped drive_msg;
 
         drive_msg.drive.speed = 1.0;
@@ -86,26 +96,19 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg, ros::Publisher &drive
         if(drive_msg.drive.steering_angle == drive_data.drive.steering_angle) {
             ROS_INFO("yeeh!");
         }
-
-    } else {
-
-
-        if(waypoints.size() > 1) { // yes waypoints
-            ROS_INFO(" ");
-        } else {
-            // No waypoints;
-            ROS_INFO("NO waypoints recognized");
-        }
-
     }
+
 }
 
+
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "point_follower");
+    ros::init(argc, argv, "lidar_tractor");
     ros::NodeHandle nh;
 
-    destination = {x=0.0, y=0.0};
-    currentPOS = {x=-1.0, y=-1.0};
+
+    //init
+   // destination = {0.0, 0.0};
+    //currentPOS = {-1.0, -1.0};
 
     ros::Publisher drive_pub = nh.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 100);
     

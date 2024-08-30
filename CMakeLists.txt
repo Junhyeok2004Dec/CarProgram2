@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     visualization_msgs
     std_msgs
     message_generation
+
 )
 
 catkin_package()
@@ -36,3 +37,7 @@ target_link_libraries(straight_drive ${catkin_LIBRARIES})
 # 추가된 point_follower 노드
 add_executable(point_follower src/NodeControl.cpp)
 target_link_libraries(point_follower ${catkin_LIBRARIES})
+
+# 라이다 쫒기
+add_executable(lidar_tractor src/LidarTractDemo.cpp)
+target_link_libraries(lidar_tractor ${catkin_LIBRARIES})
