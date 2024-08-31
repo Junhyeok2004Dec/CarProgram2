@@ -10,10 +10,8 @@
 
 
 
-geometry_msgs::Point current_position, destination;
-
+geometry_msgs::Point current_position;
 geometry_msgs::Point destination; // 도착지점 -> scan_angle 방위의 scan_distance 거리 
-geometry_msgs::Point currentPOS; // 현재지점 -> 제곧내
 
 static float COLLISION_RANGE = 1.0f; 
 
