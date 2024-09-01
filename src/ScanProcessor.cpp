@@ -10,14 +10,11 @@ public:
     ScanProcessor() {
         ros::NodeHandle nh;
 
-        // /scan 토픽을 구독
         scan_sub_ = nh.subscribe("/scan", 10, &ScanProcessor::scanCallback, this);
 
-        // /scan_demo_distance 토픽에 퍼블리시할 퍼블리셔 생성
         distance_pub_ = nh.advertise<std_msgs::Float32>("/scan_demo_distance", 10);
-
-        // /scan_demo_angle 토픽에 퍼블리시할 퍼블리셔 생성
         angle_pub_ = nh.advertise<std_msgs::Float32>("/scan_demo_angle", 10);
+
     }
 
     void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan_msg) {
