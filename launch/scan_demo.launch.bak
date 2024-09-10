@@ -1,9 +1,0 @@
-<launch>
-  <!-- 노드 실행 -->
-  <node
-    name="scan_processor_node"
-    pkg="<패키지명>"
-    type="scan_processor_node"
-    output="screen">
-  </node>
-</launch>

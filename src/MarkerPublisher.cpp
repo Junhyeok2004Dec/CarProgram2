@@ -11,7 +11,7 @@ ros::Subscriber distance_sub;  // 거리 topic
 ros::Subscriber angle_sub;     // 각도(라이다 각도, 일반각-라디안) topic
 
 
-ros::Publisher marker_pub;
+ros::Publisher marker_pub;  // 화살표로 표시 (RVIZ)
 
 void distanceCallback(const std_msgs::Float32::ConstPtr& msg)
 {

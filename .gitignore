@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+*.bak
+*.Identifier
+src/Scanner.cpp:Zone.Identifier
+=======
 # Prerequisites
 *.d
 
@@ -50,3 +55,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+>>>>>>> 97e1b5db213caea72f039eff06a38dc4b268efd4

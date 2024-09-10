@@ -1,0 +1,26 @@
+<launch>
+
+  <node
+    name="scan_data_publisher"
+    pkg="f1tenth_code"
+    type="scan_data_publisher"
+    output="screen">
+  </node>
+
+
+  <node
+    name="marker_publisher"
+    pkg="f1tenth_code"
+    type="marker_publisher"
+    output="screen">
+  </node>
+
+
+  <node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    output="screen">
+    <param name="config" value="$(find f1tenth_code)/config/scan_demo.rviz"/>
+  </node>
+</launch>
