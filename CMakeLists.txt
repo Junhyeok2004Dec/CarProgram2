@@ -41,3 +41,8 @@ target_link_libraries(point_follower ${catkin_LIBRARIES})
 # 라이다 쫒기
 add_executable(lidar_tractor src/LidarTractDemo.cpp)
 target_link_libraries(lidar_tractor ${catkin_LIBRARIES})
+
+
+# 왼쪽 벽 주행
+add_executable(wall_following_drive src/WallFollowingLeft.cpp)
+target_link_libraries(wall_following_drive ${catkin_LIBRARIES})

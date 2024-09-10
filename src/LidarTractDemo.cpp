@@ -15,7 +15,6 @@ public:
         ros::NodeHandle nh;
 
         scan_sub_ = nh.subscribe("/scan", 10, &LidarTractor::scanCallback, this);
-        
         distance_sub_ = nh.subscribe("/scan_demo_distance", 10, &LidarTractor::distanceCallback, this);
         angle_sub_ = nh.subscribe("/scan_demo_angle", 10, &LidarTractor::angleCallback, this);
         
@@ -27,9 +26,13 @@ public:
     void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan_msg) {
         for (size_t i = 0; i < scan_msg->ranges.size(); ++i) {
             float range = scan_msg->ranges[i];
-            if (range < COLLISION_RANGE) {  // 
+
+            ROS_INFO("%f",range);
+
+
+            if (range < COLLISION_RANGE) { 
                 obstacle_detected_ = true;
-                ROS_WARN("Crash Warning! going back!");
+                ROS_WARN("Cauction! going back!");
                 stopVehicle();
                 
             }
@@ -59,9 +62,9 @@ public:
 
             // Move vehicle towards target point
             ackermann_msgs::AckermannDriveStamped drive_msg;
-            drive_msg.drive.speed = 1.0;  // Basic speed
-            drive_msg.drive.steering_angle = steering_angle;
-            drive_pub_.publish(drive_msg);
+            drive_msg.drive.speed = 0.8;  // Basic speed
+            drive_msg.drive.steering_angle = steering_angle*1.05;
+            drive_pub_.publish(drive_msg);  
         }
     }
 
@@ -76,26 +79,30 @@ private:
     float target_angle_ = -1;
     bool obstacle_detected_ = false;
 
-    void stopVehicle() {
-
-
-    ros::Time start_time = ros::Time::now();
-
-
-    ackermann_msgs::AckermannDriveStamped stop_msg;
-
-    ROS_INFO("BACK");
-
-    stop_msg.drive.speed = -1.0;
-    stop_msg.drive.steering_angle = 0.0;
     
-    drive_pub_.publish(stop_msg);
 
-    while (ros::ok() && (ros::Time::now() - start_time).toSec() < 2.0)
+    void stopVehicle() {
+            
+
+
+
+        ros::Time start_time = ros::Time::now();
+
+
+        ackermann_msgs::AckermannDriveStamped stop_msg;
+
+        ROS_INFO("BACK");
+
+        stop_msg.drive.speed = -0.1;
+        stop_msg.drive.steering_angle = 0.0;
         
-    ROS_INFO("STOP");
-    stop_msg.drive.speed = 0.0; // 정지
-    drive_pub_.publish(stop_msg);
+        drive_pub_.publish(stop_msg);
+
+        while (ros::ok() && (ros::Time::now() - start_time).toSec() < 2.0)
+            
+        ROS_INFO("STOP");
+        stop_msg.drive.speed = 0.0; // 정지
+        drive_pub_.publish(stop_msg);
 
 
     }
