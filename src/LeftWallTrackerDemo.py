@@ -93,7 +93,7 @@ class WallFollow:
             None
         """
         error = self.get_error(msg, self.desired_distance)
-        velocity = 1.0  # Constant velocity
+        velocity = 0.6  # Constant velocity
 
         # Log the left distance
         rospy.loginfo(f"Error: {error:.2f}")

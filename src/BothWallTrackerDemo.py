@@ -13,7 +13,7 @@ class WallFollow:
         self.drive_pub = rospy.Publisher('/drive', AckermannDriveStamped, queue_size=10)
         
         self.desired_distance = 1.0  # 벽과의 목표 거리 (미터)
-        self.max_speed = 5.0
+        self.max_speed = 1.0
         self.min_speed = 0.1
 
         # 거리 정보를 저장할 변수들
@@ -47,9 +47,9 @@ class WallFollow:
         
         # 속도 계산
         speed = self.max_speed
-        if self.front_distance < 1.0:
+        if self.front_distance < 1.1:
             speed = self.min_speed
-        elif self.front_distance < 2.0:
+        elif self.front_distance < 2.1:
             speed = self.min_speed + (self.max_speed - self.min_speed) * (self.front_distance - 1.0)
         
         # 주행 명령 발행
