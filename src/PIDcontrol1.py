@@ -12,8 +12,8 @@ class WallFollow:
         self.scan_sub = rospy.Subscriber('/scan', LaserScan, self.scan_callback)
         self.drive_pub = rospy.Publisher('/drive', AckermannDriveStamped, queue_size=10)
         
-        self.max_speed = 1.0
-        self.min_speed = 0.1
+        self.max_speed = 3.0
+        self.min_speed = 0.05
         self.kp = 0.5  # 비례 제어 상수
         self.ki = 0.05  # 적분 제어 상수
         self.kd = 0.5  # 미분 제어 상수
@@ -67,11 +67,11 @@ class WallFollow:
                           self.kd * derivative_error)
 
         # 전방 거리가 2m 미만일 때 속도 조절 및 회피
-        if self.front_distance < 2.0:
+        if self.front_distance < 1.9:
             if self.right_distance > self.left_distance:
-                steering_angle = -0.8  # 오른쪽으로 회전
+                steering_angle = -0.6  # 오른쪽으로 회전
             else:
-                steering_angle = 0.8  # 왼쪽으로 회전
+                steering_angle = 0.6  # 왼쪽으로 회전
             
             # 전방 거리에 따른 속도 조절
             speed = max(self.min_speed, min(self.max_speed, self.front_distance / 2))

@@ -46,3 +46,8 @@ target_link_libraries(lidar_tractor ${catkin_LIBRARIES})
 # 왼쪽 벽 주행
 add_executable(wall_following_drive src/WallFollowingLeft.cpp)
 target_link_libraries(wall_following_drive ${catkin_LIBRARIES})
+
+
+# 벽 주행 (wall follow.py를 cpp로 포팅하였다.)
+add_executable(wall_follow_node src/wall_follow.cpp)
+target_link_libraries(wall_follow_node ${catkin_LIBRARIES})
