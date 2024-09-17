@@ -2,6 +2,8 @@
 
 import rospy
 import numpy as np
+
+from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
 from ackermann_msgs.msg import AckermannDriveStamped
 
@@ -9,6 +11,8 @@ class WallFollow:
     def __init__(self):
         rospy.init_node('wall_follow_node', anonymous=True)
         
+        
+        self.lap_sub = rospy.Subscriber('/lap', String, self.lap_callback)
         self.scan_sub = rospy.Subscriber('/scan', LaserScan, self.scan_callback)
         self.drive_pub = rospy.Publisher('/drive', AckermannDriveStamped, queue_size=10)
         
@@ -29,7 +33,14 @@ class WallFollow:
         # 주기적으로 거리 정보를 출력하는 타이머
         rospy.Timer(rospy.Duration(0.1), self.publish_distances)  # 10Hz로 거리 정보 출력
 
+    def lap_callback(self, data):
+        global lap
+        
+        lap = data.data
+
     def scan_callback(self, scan_msg):
+              
+            
         ranges = np.array(scan_msg.ranges)
         
         # 270도 라이다 기준 (0도가 정면, 90도가 왼쪽, -90도가 오른쪽)
@@ -63,8 +74,8 @@ class WallFollow:
 
         # PID 제어
         steering_angle = (self.kp * error + 
-                          self.ki * self.integral_error + 
-                          self.kd * derivative_error)
+                        self.ki * self.integral_error + 
+                        self.kd * derivative_error)
 
         # 전방 거리가 2m 미만일 때 속도 조절 및 회피
         if self.front_distance < 2.0:
