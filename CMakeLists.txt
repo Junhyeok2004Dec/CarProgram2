@@ -38,6 +38,13 @@ target_link_libraries(straight_drive ${catkin_LIBRARIES})
 add_executable(point_follower src/NodeControl.cpp)
 target_link_libraries(point_follower ${catkin_LIBRARIES})
 
+add_executable(straight_Left src/GoStraightTurnLeft.cpp)
+target_link_libraries(straight_Left ${catkin_LIBRARIES})
+
+
+add_executable(straight_Right src/GoStraightTurnRight.cpp)
+target_link_libraries(straight_Right ${catkin_LIBRARIES})
+
 # 라이다 쫒기
 add_executable(lidar_tractor src/LidarTractDemo.cpp)
 target_link_libraries(lidar_tractor ${catkin_LIBRARIES})
